@@ -1,0 +1,21 @@
+{
+  "name": "samson-landing-page",
+  "version": "1.0.0",
+  "description": "Landing page for Samson Group of Companies with CMS, CRM, and social media integration",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server -p 8080",
+    "dev": "npx http-server -p 8080 -o"
+  },
+  "keywords": [
+    "landing-page",
+    "cms",
+    "crm",
+    "social-media"
+  ],
+  "author": "Samson Group of Companies",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
