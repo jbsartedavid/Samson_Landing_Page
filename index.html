@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Samson Group of Companies - Leading provider of innovative business solutions">
+    <meta name="keywords" content="Samson Group, business solutions, enterprise, services">
+    
+    <!-- Social Media Meta Tags -->
+    <meta property="og:title" content="Samson Group of Companies">
+    <meta property="og:description" content="Leading provider of innovative business solutions">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://samsongroup.com">
+    <meta property="og:image" content="assets/images/og-image.jpg">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Samson Group of Companies">
+    <meta name="twitter:description" content="Leading provider of innovative business solutions">
+    <meta name="twitter:image" content="assets/images/twitter-image.jpg">
+    
+    <title>Samson Group of Companies - Home</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h1>Samson Group</h1>
+            </div>
+            <button class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#services" class="nav-link">Services</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+                <li><a href="admin.html" class="nav-link admin-link">Admin</a></li>
+                <li><a href="crm.html" class="nav-link crm-link">CRM</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Welcome to Samson Group of Companies</h1>
+            <p class="hero-subtitle">Leading provider of innovative business solutions</p>
+            <button class="btn btn-primary" onclick="scrollToSection('contact')">Get Started</button>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section about">
+        <div class="container">
+            <h2 class="section-title">About Us</h2>
+            <div class="about-content">
+                <p class="about-text">
+                    Samson Group of Companies is a leading provider of innovative business solutions. 
+                    With years of experience and a commitment to excellence, we help businesses grow 
+                    and succeed in today's competitive market.
+                </p>
+                <div class="about-stats">
+                    <div class="stat">
+                        <h3>15+</h3>
+                        <p>Years of Experience</p>
+                    </div>
+                    <div class="stat">
+                        <h3>500+</h3>
+                        <p>Happy Clients</p>
+                    </div>
+                    <div class="stat">
+                        <h3>1000+</h3>
+                        <p>Projects Completed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="section services">
+        <div class="container">
+            <h2 class="section-title">Our Services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <i class="fas fa-chart-line service-icon"></i>
+                    <h3>Business Consulting</h3>
+                    <p>Strategic guidance to help your business reach new heights</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-laptop-code service-icon"></i>
+                    <h3>Technology Solutions</h3>
+                    <p>Cutting-edge technology to streamline your operations</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-users service-icon"></i>
+                    <h3>CRM Management</h3>
+                    <p>Comprehensive customer relationship management tools</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-bullhorn service-icon"></i>
+                    <h3>Digital Marketing</h3>
+                    <p>Boost your online presence with our marketing expertise</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section contact">
+        <div class="container">
+            <h2 class="section-title">Contact Us</h2>
+            <div class="contact-content">
+                <form id="contactForm" class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="tel" id="phone" name="phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+                <div class="contact-info">
+                    <h3>Get in Touch</h3>
+                    <p><i class="fas fa-envelope"></i> info@samsongroup.com</p>
+                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Business St, City, State 12345</p>
+                    
+                    <!-- Social Media Links -->
+                    <div class="social-links">
+                        <h4>Follow Us</h4>
+                        <a href="https://facebook.com/samsongroup" target="_blank" class="social-link" aria-label="Facebook">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="https://twitter.com/samsongroup" target="_blank" class="social-link" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://linkedin.com/company/samsongroup" target="_blank" class="social-link" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="https://instagram.com/samsongroup" target="_blank" class="social-link" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                    
+                    <!-- Share Buttons -->
+                    <div class="share-buttons">
+                        <h4>Share This Page</h4>
+                        <button onclick="shareOnFacebook()" class="share-btn facebook-share" aria-label="Share on Facebook">
+                            <i class="fab fa-facebook"></i> Share
+                        </button>
+                        <button onclick="shareOnTwitter()" class="share-btn twitter-share" aria-label="Share on Twitter">
+                            <i class="fab fa-twitter"></i> Tweet
+                        </button>
+                        <button onclick="shareOnLinkedIn()" class="share-btn linkedin-share" aria-label="Share on LinkedIn">
+                            <i class="fab fa-linkedin"></i> Share
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Samson Group of Companies. All rights reserved.</p>
+            <div class="footer-social">
+                <a href="https://facebook.com/samsongroup" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="https://twitter.com/samsongroup" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="https://linkedin.com/company/samsongroup" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="https://instagram.com/samsongroup" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

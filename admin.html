@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Samson Group CMS</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h1>Samson Group - CMS</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="crm.html" class="nav-link">CRM</a></li>
+                <li><a href="#" class="nav-link active">Admin</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Admin Dashboard -->
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <h3>Content Management</h3>
+            <ul class="admin-menu">
+                <li><a href="#" data-section="overview" class="admin-menu-link active">
+                    <i class="fas fa-tachometer-alt"></i> Overview
+                </a></li>
+                <li><a href="#" data-section="content" class="admin-menu-link">
+                    <i class="fas fa-edit"></i> Edit Content
+                </a></li>
+                <li><a href="#" data-section="services" class="admin-menu-link">
+                    <i class="fas fa-briefcase"></i> Manage Services
+                </a></li>
+                <li><a href="#" data-section="social" class="admin-menu-link">
+                    <i class="fas fa-share-alt"></i> Social Media
+                </a></li>
+            </ul>
+        </aside>
+
+        <main class="admin-content">
+            <!-- Overview Section -->
+            <section id="overview" class="admin-section active">
+                <h2>Dashboard Overview</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-eye"></i>
+                        <h3 id="pageViews">1,234</h3>
+                        <p>Page Views</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <h3 id="totalContacts">0</h3>
+                        <p>Total Contacts</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-share-alt"></i>
+                        <h3 id="socialShares">456</h3>
+                        <p>Social Shares</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>98%</h3>
+                        <p>Engagement Rate</p>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <div id="activityList" class="activity-list">
+                        <p>Loading recent activity...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Edit Content Section -->
+            <section id="content" class="admin-section">
+                <h2>Edit Page Content</h2>
+                <form id="contentForm" class="admin-form">
+                    <div class="form-group">
+                        <label for="heroTitle">Hero Title</label>
+                        <input type="text" id="heroTitle" value="Welcome to Samson Group of Companies">
+                    </div>
+                    <div class="form-group">
+                        <label for="heroSubtitle">Hero Subtitle</label>
+                        <input type="text" id="heroSubtitle" value="Leading provider of innovative business solutions">
+                    </div>
+                    <div class="form-group">
+                        <label for="aboutText">About Text</label>
+                        <textarea id="aboutText" rows="6">Samson Group of Companies is a leading provider of innovative business solutions. With years of experience and a commitment to excellence, we help businesses grow and succeed in today's competitive market.</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactEmail">Contact Email</label>
+                        <input type="email" id="contactEmail" value="info@samsongroup.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="contactPhone">Contact Phone</label>
+                        <input type="tel" id="contactPhone" value="+1 (555) 123-4567">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </section>
+
+            <!-- Manage Services Section -->
+            <section id="services" class="admin-section">
+                <h2>Manage Services</h2>
+                <button class="btn btn-primary" onclick="addService()">
+                    <i class="fas fa-plus"></i> Add New Service
+                </button>
+                <div id="servicesList" class="services-admin-list">
+                    <!-- Services will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Social Media Section -->
+            <section id="social" class="admin-section">
+                <h2>Social Media Management</h2>
+                <form id="socialForm" class="admin-form">
+                    <div class="form-group">
+                        <label for="facebookUrl">Facebook URL</label>
+                        <input type="url" id="facebookUrl" value="https://facebook.com/samsongroup">
+                    </div>
+                    <div class="form-group">
+                        <label for="twitterUrl">Twitter URL</label>
+                        <input type="url" id="twitterUrl" value="https://twitter.com/samsongroup">
+                    </div>
+                    <div class="form-group">
+                        <label for="linkedinUrl">LinkedIn URL</label>
+                        <input type="url" id="linkedinUrl" value="https://linkedin.com/company/samsongroup">
+                    </div>
+                    <div class="form-group">
+                        <label for="instagramUrl">Instagram URL</label>
+                        <input type="url" id="instagramUrl" value="https://instagram.com/samsongroup">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Social Links</button>
+                </form>
+
+                <div class="social-stats">
+                    <h3>Social Media Analytics</h3>
+                    <div class="social-stats-grid">
+                        <div class="social-stat">
+                            <i class="fab fa-facebook"></i>
+                            <h4>5,234</h4>
+                            <p>Facebook Followers</p>
+                        </div>
+                        <div class="social-stat">
+                            <i class="fab fa-twitter"></i>
+                            <h4>3,456</h4>
+                            <p>Twitter Followers</p>
+                        </div>
+                        <div class="social-stat">
+                            <i class="fab fa-linkedin"></i>
+                            <h4>2,891</h4>
+                            <p>LinkedIn Connections</p>
+                        </div>
+                        <div class="social-stat">
+                            <i class="fab fa-instagram"></i>
+                            <h4>4,567</h4>
+                            <p>Instagram Followers</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

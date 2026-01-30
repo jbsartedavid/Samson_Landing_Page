@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Dashboard - Samson Group</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h1>Samson Group - CRM</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="admin.html" class="nav-link">Admin</a></li>
+                <li><a href="#" class="nav-link active">CRM</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- CRM Dashboard -->
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <h3>CRM Management</h3>
+            <ul class="admin-menu">
+                <li><a href="#" data-section="crm-overview" class="admin-menu-link active">
+                    <i class="fas fa-chart-pie"></i> Overview
+                </a></li>
+                <li><a href="#" data-section="contacts" class="admin-menu-link">
+                    <i class="fas fa-address-book"></i> Contacts
+                </a></li>
+                <li><a href="#" data-section="leads" class="admin-menu-link">
+                    <i class="fas fa-user-plus"></i> Leads
+                </a></li>
+                <li><a href="#" data-section="reports" class="admin-menu-link">
+                    <i class="fas fa-file-alt"></i> Reports
+                </a></li>
+            </ul>
+        </aside>
+
+        <main class="admin-content">
+            <!-- CRM Overview Section -->
+            <section id="crm-overview" class="admin-section active">
+                <h2>CRM Overview</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <h3 id="totalCustomers">0</h3>
+                        <p>Total Contacts</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-user-plus"></i>
+                        <h3 id="newLeads">0</h3>
+                        <p>New Leads</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-check-circle"></i>
+                        <h3 id="conversions">0</h3>
+                        <p>Conversions</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-dollar-sign"></i>
+                        <h3>$0</h3>
+                        <p>Revenue</p>
+                    </div>
+                </div>
+
+                <div class="crm-pipeline">
+                    <h3>Sales Pipeline</h3>
+                    <div class="pipeline-stages">
+                        <div class="pipeline-stage">
+                            <h4>New</h4>
+                            <p class="stage-count" id="stageNew">0</p>
+                        </div>
+                        <div class="pipeline-stage">
+                            <h4>Contacted</h4>
+                            <p class="stage-count" id="stageContacted">0</p>
+                        </div>
+                        <div class="pipeline-stage">
+                            <h4>Qualified</h4>
+                            <p class="stage-count" id="stageQualified">0</p>
+                        </div>
+                        <div class="pipeline-stage">
+                            <h4>Proposal</h4>
+                            <p class="stage-count" id="stageProposal">0</p>
+                        </div>
+                        <div class="pipeline-stage">
+                            <h4>Closed</h4>
+                            <p class="stage-count" id="stageClosed">0</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contacts Section -->
+            <section id="contacts" class="admin-section">
+                <h2>Contact Management</h2>
+                <div class="section-header">
+                    <button class="btn btn-primary" onclick="exportContacts()">
+                        <i class="fas fa-download"></i> Export Contacts
+                    </button>
+                    <button class="btn btn-primary" onclick="refreshContacts()">
+                        <i class="fas fa-sync"></i> Refresh
+                    </button>
+                </div>
+                
+                <div class="search-bar">
+                    <input type="text" id="contactSearch" placeholder="Search contacts..." onkeyup="filterContacts()">
+                    <i class="fas fa-search"></i>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table" id="contactsTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contactsTableBody">
+                            <tr>
+                                <td colspan="6" class="no-data">No contacts found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Leads Section -->
+            <section id="leads" class="admin-section">
+                <h2>Lead Management</h2>
+                <button class="btn btn-primary" onclick="addLead()">
+                    <i class="fas fa-plus"></i> Add New Lead
+                </button>
+
+                <div class="leads-grid" id="leadsGrid">
+                    <div class="lead-card sample">
+                        <div class="lead-header">
+                            <h4>Sample Lead</h4>
+                            <span class="lead-status new">New</span>
+                        </div>
+                        <p><i class="fas fa-envelope"></i> sample@example.com</p>
+                        <p><i class="fas fa-phone"></i> +1 (555) 000-0000</p>
+                        <p><i class="fas fa-building"></i> Sample Company</p>
+                        <div class="lead-actions">
+                            <button class="btn-small">Contact</button>
+                            <button class="btn-small">Convert</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports" class="admin-section">
+                <h2>CRM Reports</h2>
+                <div class="reports-grid">
+                    <div class="report-card">
+                        <h4><i class="fas fa-calendar-day"></i> Daily Report</h4>
+                        <p>Contacts today: <strong id="dailyContacts">0</strong></p>
+                        <p>Leads today: <strong id="dailyLeads">0</strong></p>
+                    </div>
+                    <div class="report-card">
+                        <h4><i class="fas fa-calendar-week"></i> Weekly Report</h4>
+                        <p>Contacts this week: <strong id="weeklyContacts">0</strong></p>
+                        <p>Conversion rate: <strong>0%</strong></p>
+                    </div>
+                    <div class="report-card">
+                        <h4><i class="fas fa-calendar-alt"></i> Monthly Report</h4>
+                        <p>Contacts this month: <strong id="monthlyContacts">0</strong></p>
+                        <p>Revenue: <strong>$0</strong></p>
+                    </div>
+                </div>
+
+                <div class="export-section">
+                    <h3>Export Reports</h3>
+                    <button class="btn btn-primary" onclick="exportReport('daily')">
+                        <i class="fas fa-file-excel"></i> Daily Report
+                    </button>
+                    <button class="btn btn-primary" onclick="exportReport('weekly')">
+                        <i class="fas fa-file-excel"></i> Weekly Report
+                    </button>
+                    <button class="btn btn-primary" onclick="exportReport('monthly')">
+                        <i class="fas fa-file-excel"></i> Monthly Report
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/crm.js"></script>
+</body>
+</html>
