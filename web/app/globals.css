@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-sans antialiased;
+    font-family: 'Manrope', sans-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-8 py-3 bg-gradient-to-r from-[#b8892e] to-[#e0b458] text-white font-bold rounded-lg hover:shadow-lg transition;
+  }
+
+  .btn-secondary {
+    @apply px-8 py-3 border-2 border-[#e0b458] text-[#e0b458] font-bold rounded-lg hover:bg-[#e0b458] hover:text-[#3f2b17] transition;
+  }
+
+  .section-title {
+    @apply text-4xl font-bold text-[#3f2b17] mb-8 text-center;
+  }
+}
+
+/* Smooth scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b8892e;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a07824;
+}
+
+/* Services carousel navigation */
+.services-swiper .swiper-button-prev,
+.services-swiper .swiper-button-next {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #b8892e, #e0b458);
+  box-shadow: 0 10px 25px rgba(184, 137, 46, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.services-swiper .swiper-button-prev:hover,
+.services-swiper .swiper-button-next:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 16px 30px rgba(184, 137, 46, 0.45);
+}
+
+.services-swiper .swiper-button-prev::after,
+.services-swiper .swiper-button-next::after {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.services-swiper .swiper-button-prev {
+  left: 8px;
+}
+
+.services-swiper .swiper-button-next {
+  right: 8px;
+}
+
+.services-swiper .swiper-button-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.services-swiper .swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: #d9c7a4;
+  opacity: 1;
+  margin: 0 6px !important;
+}
+
+.services-swiper .swiper-pagination-bullet-active {
+  width: 26px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #b8892e, #e0b458);
+  box-shadow: 0 6px 16px rgba(184, 137, 46, 0.35);
+}

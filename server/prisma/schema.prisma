@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Content {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Lead {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  phone     String?
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model ChatSession {
+  id              Int           @id @default(autoincrement())
+  visitorName     String?
+  visitorEmail    String?
+  status          String        @default("active") // active, closed
+  hasUnreadAdmin  Boolean       @default(false)
+  lastMessageAt   DateTime      @default(now())
+  createdAt       DateTime      @default(now())
+  messages        ChatMessage[]
+}
+
+model ChatMessage {
+  id        Int      @id @default(autoincrement())
+  sessionId Int
+  role      String   // user, assistant, admin
+  content   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  session ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+model Obituary {
+  id        Int      @id @default(autoincrement())
+  title     String
+  deceased  String
+  content   String
+  image     String?
+  dateOfDeath DateTime
+  dateOfService DateTime?
+  location  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Announcement {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  image     String?
+  priority  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DirectoryEntry {
+  id        Int      @id @default(autoincrement())
+  name      String
+  type      String
+  address   String
+  phone     String?
+  email     String?
+  hours     String?
+  image     String?
+  latitude  Float?
+  longitude Float?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Service {
+  id          Int      @id @default(autoincrement())
+  name        String   @default("")
+  heading     String
+  caption     String?
+  content     String?
+  image       String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Affiliation {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  logo        String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Stat {
+  id          Int      @id @default(autoincrement())
+  label       String
+  value       Int
+  suffix      String?  
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Officer {
+  id          Int      @id @default(autoincrement())
+  name        String
+  position    String
+  department  String?
+  email       String?
+  phone       String?
+  bio         String?
+  image       String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
