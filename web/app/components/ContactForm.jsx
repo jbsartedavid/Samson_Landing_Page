@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -14,6 +15,31 @@ export default function ContactForm() {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("");
   const [errors, setErrors] = useState({});
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaKey, setCaptchaKey] = useState(0);
+  const [captchaEnabled, setCaptchaEnabled] = useState(false);
+  const [captchaSiteKey, setCaptchaSiteKey] = useState("");
+  const siteKey = captchaSiteKey || process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY;
+
+  useEffect(() => {
+    const loadCaptchaSettings = async () => {
+      try {
+        const res = await fetch("/api/content");
+        if (!res.ok) return;
+        const data = await res.json();
+        const contentMap = {};
+        data.forEach((item) => {
+          contentMap[item.key] = item.value;
+        });
+        setCaptchaEnabled(contentMap.captchaEnabled === "true");
+        setCaptchaSiteKey(contentMap.hcaptchaSiteKey || "");
+      } catch (error) {
+        console.error("Failed to load captcha settings:", error);
+      }
+    };
+
+    loadCaptchaSettings();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,6 +79,10 @@ export default function ContactForm() {
       newErrors.message = "Message must be at least 10 characters";
     }
 
+    if (captchaEnabled && !captchaToken) {
+      newErrors.captcha = "Please complete the CAPTCHA";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -74,7 +104,7 @@ export default function ContactForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, captchaToken: captchaEnabled ? captchaToken : "" }),
       });
 
       const data = await res.json();
@@ -88,6 +118,8 @@ export default function ContactForm() {
           subject: "",
           message: "",
         });
+        setCaptchaToken("");
+        setCaptchaKey((prev) => prev + 1);
         setErrors({});
         // Auto-hide success message after 5 seconds
         setTimeout(() => setStatus(""), 5000);
@@ -234,6 +266,46 @@ export default function ContactForm() {
           {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message}</p>}
           <p className="text-gray-500 text-xs mt-1">Minimum 10 characters required</p>
         </div>
+
+        {/* CAPTCHA */}
+        {captchaEnabled && (
+          <div className="flex flex-col items-center gap-3">
+            {siteKey ? (
+              <HCaptcha
+                key={captchaKey}
+                sitekey={siteKey}
+                onVerify={(token) => {
+                  setCaptchaToken(token);
+                  if (errors.captcha) {
+                    setErrors((prev) => ({
+                      ...prev,
+                      captcha: "",
+                    }));
+                  }
+                }}
+                onExpire={() => {
+                  setCaptchaToken("");
+                  setErrors((prev) => ({
+                    ...prev,
+                    captcha: "Captcha expired. Please try again.",
+                  }));
+                }}
+                onError={() => {
+                  setCaptchaToken("");
+                  setErrors((prev) => ({
+                    ...prev,
+                    captcha: "Captcha failed to load. Please refresh and try again.",
+                  }));
+                }}
+              />
+            ) : (
+              <div className="w-full bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700 text-center">
+                CAPTCHA is enabled but not configured. Add the hCaptcha Site Key in Admin → System Settings.
+              </div>
+            )}
+            {errors.captcha && <p className="text-red-500 text-sm">{errors.captcha}</p>}
+          </div>
+        )}
 
         {/* Submit Button with Enhanced Design */}
         <button

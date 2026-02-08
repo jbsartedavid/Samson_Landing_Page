@@ -1,16 +1,25 @@
 /** @type {import('next').NextConfig} */
+const isProd = process.env.NODE_ENV === "production";
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || (isProd ? "/Samson_Landing_Page" : "");
+const assetPrefix = basePath ? `${basePath}/` : "";
+
 const nextConfig = {
-  output: 'export',
-  basePath: '/Samson_Landing_Page',
-  assetPrefix: '/Samson_Landing_Page/',
+  output: "export",
+  basePath,
+  assetPrefix,
   images: {
     unoptimized: true,
   },
   async rewrites() {
+    if (isProd) {
+      return [];
+    }
+
+    const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
     return [
       {
         source: "/api/:path*",
-        destination: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001" + "/api/:path*",
+        destination: `${apiBase}/api/:path*`,
       },
     ];
   },

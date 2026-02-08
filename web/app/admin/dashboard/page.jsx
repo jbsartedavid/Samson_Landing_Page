@@ -33,6 +33,8 @@ export default function AdminDashboard() {
   const [facebookMessengerUrl, setFacebookMessengerUrl] = useState("");
   const [facebookMessengerText, setFacebookMessengerText] = useState("");
   const [whatsappNumber, setWhatsappNumber] = useState("");
+  const [captchaEnabled, setCaptchaEnabled] = useState(false);
+  const [hcaptchaSiteKey, setHcaptchaSiteKey] = useState("");
   const [footerTitle, setFooterTitle] = useState("");
   const [footerTagline, setFooterTagline] = useState("");
   const [footerCopyright, setFooterCopyright] = useState("");
@@ -47,19 +49,6 @@ export default function AdminDashboard() {
   const [smtpPassword, setSmtpPassword] = useState("");
   const [smtpFromEmail, setSmtpFromEmail] = useState("");
   const [contactFormEmail, setContactFormEmail] = useState("");
-
-  // Obituaries state
-  const [obituaries, setObituaries] = useState([]);
-  const [newObituary, setNewObituary] = useState({
-    title: "",
-    deceased: "",
-    content: "",
-    image: "",
-    dateOfDeath: "",
-    dateOfService: "",
-    location: "",
-  });
-  const [editingObituary, setEditingObituary] = useState(null);
 
   // Announcements state
   const [announcements, setAnnouncements] = useState([]);
@@ -96,17 +85,14 @@ export default function AdminDashboard() {
     phone: "",
     bio: "",
     image: "",
-    order: 0,
   });
   const [editingOfficer, setEditingOfficer] = useState(null);
 
   // Services state
   const [services, setServices] = useState([]);
   const [newService, setNewService] = useState({
-    name: "",
     heading: "",
     caption: "",
-    content: "",
     image: "",
     order: 0,
   });
@@ -125,33 +111,31 @@ export default function AdminDashboard() {
   // Chats state
   const [chatSessions, setChatSessions] = useState([]);
   const [selectedSession, setSelectedSession] = useState(null);
-  const [chatMessages, setChatMessages] = useState([]);
   const [replyMessage, setReplyMessage] = useState("");
-  const [chatFilter, setChatFilter] = useState("all"); // all, active, closed
+  const [chatMessages, setChatMessages] = useState([]);
+  const [chatFilter, setChatFilter] = useState("all");
 
+  // Save status
   const [saveStatus, setSaveStatus] = useState("");
 
   useEffect(() => {
-    const checkAuth = () => {
-      if (typeof window !== "undefined") {
-        const token = localStorage.getItem("adminToken");
-        if (!token) {
-          setAuthError("No authentication token found. Redirecting to login...");
-          setTimeout(() => router.push("/admin/login"), 2000);
-          return;
-        }
-        loadAllContent();
+    const checkAuth = async () => {
+      const token = localStorage.getItem("adminToken");
+      if (!token) {
+        setAuthError("No authentication token found. Redirecting to login...");
+        setTimeout(() => router.push("/admin/login"), 2000);
+        return;
       }
+      loadAllContent();
     };
     checkAuth();
   }, [router]);
 
   const loadAllContent = async () => {
     try {
-      const [contentRes, obituariesRes, announcementsRes, directoryRes, officersRes, servicesRes, affiliationsRes, chatsRes] =
+      const [contentRes, announcementsRes, directoryRes, officersRes, servicesRes, affiliationsRes, chatsRes] =
         await Promise.all([
           fetch("/api/content"),
-          fetch("/api/obituaries"),
           fetch("/api/announcements"),
           fetch("/api/directory"),
           fetch("/api/officers"),
@@ -189,17 +173,14 @@ export default function AdminDashboard() {
         setFacebookMessengerUrl(contentMap.facebookMessengerUrl || "");
         setFacebookMessengerText(contentMap.facebookMessengerText || "");
         setWhatsappNumber(contentMap.whatsappNumber || "");
+        setCaptchaEnabled(contentMap.captchaEnabled === "true");
+        setHcaptchaSiteKey(contentMap.hcaptchaSiteKey || "");
         setFooterTitle(contentMap.footerTitle || "");
         setFooterTagline(contentMap.footerTagline || "");
         setFooterCopyright(contentMap.footerCopyright || "");
         setFooterQuickLinks(contentMap.footerQuickLinks ? JSON.parse(contentMap.footerQuickLinks) : []);
         setFooterOtherLinks(contentMap.footerOtherLinks ? JSON.parse(contentMap.footerOtherLinks) : []);
         setFooterAddresses(contentMap.footerAddresses ? JSON.parse(contentMap.footerAddresses) : []);
-      }
-
-      if (obituariesRes.ok) {
-        const data = await obituariesRes.json();
-        setObituaries(data);
       }
 
       if (announcementsRes.ok) {
@@ -361,6 +342,16 @@ export default function AdminDashboard() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ value: whatsappNumber }),
         }),
+        fetch("/api/content/captchaEnabled", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ value: captchaEnabled ? "true" : "false" }),
+        }),
+        fetch("/api/content/hcaptchaSiteKey", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ value: hcaptchaSiteKey }),
+        }),
         fetch("/api/content/footerTitle", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -402,61 +393,6 @@ export default function AdminDashboard() {
     } catch (error) {
       console.error("Save error:", error);
       setSaveStatus("Error saving content");
-    }
-  };
-
-  // ===== OBITUARIES =====
-  const handleSaveObituary = async () => {
-    try {
-      if (!newObituary.title || !newObituary.deceased || !newObituary.content || !newObituary.dateOfDeath) {
-        setSaveStatus("Title, deceased name, content, and date of death are required");
-        return;
-      }
-
-      const method = editingObituary ? "PUT" : "POST";
-      const url = editingObituary ? `/api/obituaries/${editingObituary.id}` : "/api/obituaries";
-
-      const response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newObituary),
-      });
-
-      if (response.ok) {
-        setSaveStatus(editingObituary ? "Obituary updated successfully!" : "Obituary created successfully!");
-        setNewObituary({
-          title: "",
-          deceased: "",
-          content: "",
-          image: "",
-          dateOfDeath: "",
-          dateOfService: "",
-          location: "",
-        });
-        setEditingObituary(null);
-        setTimeout(() => setSaveStatus(""), 3000);
-        loadAllContent();
-      } else {
-        setSaveStatus("Error saving obituary");
-      }
-    } catch (error) {
-      console.error("Error saving obituary:", error);
-      setSaveStatus("Error saving obituary");
-    }
-  };
-
-  const handleDeleteObituary = async (id) => {
-    if (!window.confirm("Are you sure?")) return;
-    try {
-      const response = await fetch(`/api/obituaries/${id}`, { method: "DELETE" });
-      if (response.ok) {
-        setSaveStatus("Obituary deleted successfully!");
-        setTimeout(() => setSaveStatus(""), 3000);
-        loadAllContent();
-      }
-    } catch (error) {
-      console.error("Error deleting obituary:", error);
-      setSaveStatus("Error deleting obituary");
     }
   };
 
@@ -942,7 +878,6 @@ export default function AdminDashboard() {
             <div className="flex space-x-0 overflow-x-auto">
               {[
                 { id: "general", label: "General Content" },
-                { id: "obituaries", label: "Obituaries" },
                 { id: "announcements", label: "Announcements" },
                 { id: "directory", label: "Directory" },
                 { id: "officers", label: "Officers & Employees" },
@@ -1479,162 +1414,6 @@ export default function AdminDashboard() {
                   >
                     💾 Save All Changes
                   </button>
-                </div>
-              </div>
-            )}
-
-            {/* OBITUARIES TAB */}
-            {activeTab === "obituaries" && (
-              <div className="space-y-8">
-                <h2 className="text-3xl font-bold text-gray-800 mb-8">Manage Obituaries</h2>
-
-                {/* Add/Edit Form */}
-                <div className="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 rounded-xl p-6 shadow-sm">
-                  <h3 className="text-xl font-bold text-purple-900 mb-5 flex items-center gap-2">
-                    <span className="w-8 h-8 bg-purple-600 text-white rounded-lg flex items-center justify-center text-sm">✝️</span>
-                    {editingObituary ? "Edit Obituary" : "Add New Obituary"}
-                  </h3>
-
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Title</label>
-                        <input
-                          type="text"
-                          placeholder="Title"
-                          value={newObituary.title}
-                          onChange={(e) => setNewObituary({ ...newObituary, title: e.target.value })}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gold-600 focus:ring-2 focus:ring-gold-600/20 bg-white"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Deceased Name</label>
-                        <input
-                          type="text"
-                          placeholder="Deceased Name"
-                          value={newObituary.deceased}
-                          onChange={(e) => setNewObituary({ ...newObituary, deceased: e.target.value })}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gold-600 focus:ring-2 focus:ring-gold-600/20 bg-white"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Date of Death</label>
-                        <input
-                          type="date"
-                          value={newObituary.dateOfDeath}
-                          onChange={(e) => setNewObituary({ ...newObituary, dateOfDeath: e.target.value })}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gold-600 focus:ring-2 focus:ring-gold-600/20 bg-white"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Date of Service</label>
-                        <input
-                          type="date"
-                          placeholder="Date of Service"
-                          value={newObituary.dateOfService}
-                          onChange={(e) => setNewObituary({ ...newObituary, dateOfService: e.target.value })}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gold-600 focus:ring-2 focus:ring-gold-600/20 bg-white"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Location</label>
-                        <input
-                          type="text"
-                          placeholder="Location"
-                          value={newObituary.location}
-                          onChange={(e) => setNewObituary({ ...newObituary, location: e.target.value })}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gold-600 focus:ring-2 focus:ring-gold-600/20 bg-white"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Image URL</label>
-                        <input
-                          type="text"
-                          placeholder="Image URL"
-                          value={newObituary.image}
-                          onChange={(e) => setNewObituary({ ...newObituary, image: e.target.value })}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gold-600 focus:ring-2 focus:ring-gold-600/20 bg-white"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Obituary Content</label>
-                      <textarea
-                        placeholder="Obituary Content"
-                        value={newObituary.content}
-                        onChange={(e) => setNewObituary({ ...newObituary, content: e.target.value })}
-                        rows={4}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gold-600 focus:ring-2 focus:ring-gold-600/20 bg-white"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex gap-2 mt-5">
-                    <button
-                      onClick={handleSaveObituary}
-                      className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-3 rounded-lg hover:shadow-xl transition-all transform hover:scale-105"
-                    >
-                      {editingObituary ? "✓ Update" : "+ Create"} Obituary
-                    </button>
-                    {editingObituary && (
-                      <button
-                        onClick={() => {
-                          setEditingObituary(null);
-                          setNewObituary({
-                            title: "",
-                            deceased: "",
-                            content: "",
-                            image: "",
-                            dateOfDeath: "",
-                            dateOfService: "",
-                            location: "",
-                          });
-                        }}
-                        className="px-8 bg-gray-500 text-white font-bold py-3 rounded-lg hover:bg-gray-600 transition-all"
-                      >
-                        Cancel
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                {/* Obituaries List */}
-                <div className="grid gap-4">
-                  {obituaries.length === 0 ? (
-                    <p className="text-gray-500 text-center py-8">No obituaries yet</p>
-                  ) : (
-                    obituaries.map((obit) => (
-                      <div key={obit.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
-                        <div className="flex justify-between items-start">
-                          <div className="flex-1">
-                            <h4 className="font-semibold text-gray-800">{obit.title}</h4>
-                            <p className="text-sm text-gray-600">
-                              {obit.deceased} - {new Date(obit.dateOfDeath).toLocaleDateString()}
-                            </p>
-                            <p className="text-sm text-gray-500 mt-1">{obit.content.substring(0, 100)}...</p>
-                          </div>
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => {
-                                setEditingObituary(obit);
-                                setNewObituary(obit);
-                              }}
-                              className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600"
-                            >
-                              Edit
-                            </button>
-                            <button
-                              onClick={() => handleDeleteObituary(obit.id)}
-                              className="px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600"
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  )}
                 </div>
               </div>
             )}
@@ -2783,6 +2562,64 @@ export default function AdminDashboard() {
                       <li>Your Messenger link is: https://m.me/yourpagename</li>
                       <li>Replace "yourpagename" with your actual Facebook page name</li>
                     </ol>
+                  </div>
+                </div>
+
+                {/* CAPTCHA Configuration */}
+                <div className="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-300 rounded-xl p-6 shadow-sm">
+                  <h3 className="text-xl font-bold text-amber-900 mb-5 flex items-center gap-2">
+                    <span className="w-8 h-8 bg-amber-600 text-white rounded-lg flex items-center justify-center text-sm">🛡️</span>
+                    Contact Form CAPTCHA
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-6 bg-white p-3 rounded-lg border-l-4 border-amber-600">
+                    Toggle hCaptcha protection for the contact form and set the public Site Key used by the widget.
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-6 rounded-lg border border-amber-200">
+                    {/* CAPTCHA Toggle */}
+                    <div className="md:col-span-2 flex items-center justify-between gap-4">
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1">Enable CAPTCHA</label>
+                        <p className="text-xs text-gray-500">Turn on hCaptcha validation for contact form submissions.</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setCaptchaEnabled((prev) => !prev)}
+                        className={`relative inline-flex h-6 w-12 items-center rounded-full transition ${
+                          captchaEnabled ? "bg-amber-600" : "bg-gray-300"
+                        }`}
+                        aria-pressed={captchaEnabled}
+                        aria-label="Toggle CAPTCHA"
+                      >
+                        <span
+                          className={`inline-block h-5 w-5 transform rounded-full bg-white transition ${
+                            captchaEnabled ? "translate-x-6" : "translate-x-1"
+                          }`}
+                        />
+                      </button>
+                    </div>
+
+                    {/* hCaptcha Site Key */}
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">hCaptcha Site Key</label>
+                      <input
+                        type="text"
+                        value={hcaptchaSiteKey}
+                        onChange={(e) => setHcaptchaSiteKey(e.target.value)}
+                        placeholder="Enter your hCaptcha site key"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-amber-600 focus:ring-2 focus:ring-amber-600/20 bg-white"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">Public key from hCaptcha dashboard (safe to expose in frontend).</p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 mt-6 justify-end">
+                    <button
+                      onClick={handleSaveGeneral}
+                      className="px-6 py-3 bg-gradient-to-r from-amber-600 to-orange-600 text-white font-bold rounded-lg hover:shadow-xl transition-all transform hover:scale-105 flex items-center gap-2"
+                    >
+                      <span>💾</span> Save CAPTCHA Settings
+                    </button>
                   </div>
                 </div>
 

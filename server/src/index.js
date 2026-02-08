@@ -349,80 +349,6 @@ app.post("/api/admin/login", async (req, res) => {
   return res.status(401).json({ error: "Invalid credentials" });
 });
 
-// ===== OBITUARIES ENDPOINTS =====
-app.get("/api/obituaries", async (_req, res) => {
-  try {
-    const obituaries = await prisma.obituary.findMany({
-      orderBy: { dateOfDeath: "desc" },
-    });
-    res.json(obituaries);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to fetch obituaries" });
-  }
-});
-
-app.post("/api/obituaries", async (req, res) => {
-  try {
-    const { title, deceased, content, image, dateOfDeath, dateOfService, location } = req.body;
-
-    if (!title || !deceased || !content || !dateOfDeath) {
-      return res.status(400).json({ error: "Title, deceased name, content, and date of death are required" });
-    }
-
-    const obituary = await prisma.obituary.create({
-      data: {
-        title,
-        deceased,
-        content,
-        image: image || null,
-        dateOfDeath: new Date(dateOfDeath),
-        dateOfService: dateOfService ? new Date(dateOfService) : null,
-        location: location || null,
-      },
-    });
-
-    res.status(201).json(obituary);
-  } catch (error) {
-    console.error("Obituary creation error:", error);
-    res.status(500).json({ error: "Failed to create obituary" });
-  }
-});
-
-app.put("/api/obituaries/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { title, deceased, content, image, dateOfDeath, dateOfService, location } = req.body;
-
-    const obituary = await prisma.obituary.update({
-      where: { id: parseInt(id) },
-      data: {
-        title: title || undefined,
-        deceased: deceased || undefined,
-        content: content || undefined,
-        image: image || undefined,
-        dateOfDeath: dateOfDeath ? new Date(dateOfDeath) : undefined,
-        dateOfService: dateOfService ? new Date(dateOfService) : undefined,
-        location: location || undefined,
-      },
-    });
-
-    res.json(obituary);
-  } catch (error) {
-    console.error("Obituary update error:", error);
-    res.status(500).json({ error: "Failed to update obituary" });
-  }
-});
-
-app.delete("/api/obituaries/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    await prisma.obituary.delete({ where: { id: parseInt(id) } });
-    res.json({ message: "Obituary deleted" });
-  } catch (error) {
-    res.status(500).json({ error: "Failed to delete obituary" });
-  }
-});
-
 // ===== ANNOUNCEMENTS ENDPOINTS =====
 app.get("/api/announcements", async (_req, res) => {
   try {
@@ -791,10 +717,44 @@ app.delete("/api/affiliations/:id", async (req, res) => {
 // ===== CONTACT FORM =====
 app.post("/api/contact-form", async (req, res) => {
   try {
-    const { name, email, phone, subject, message } = req.body;
+    const { name, email, phone, subject, message, captchaToken } = req.body;
 
     if (!name || !email || !subject || !message) {
       return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const captchaEnabledConfig = await prisma.content.findUnique({
+      where: { key: "captchaEnabled" },
+    });
+
+    const captchaEnabled = captchaEnabledConfig?.value === "true";
+
+    if (captchaEnabled) {
+      const captchaSecret = process.env.HCAPTCHA_SECRET;
+      if (!captchaSecret) {
+        return res.status(500).json({ error: "Captcha not configured" });
+      }
+
+      if (!captchaToken) {
+        return res.status(400).json({ error: "Captcha verification required" });
+      }
+
+      const captchaResponse = await fetch("https://hcaptcha.com/siteverify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          secret: captchaSecret,
+          response: captchaToken,
+          remoteip: req.ip,
+        }).toString(),
+      });
+
+      const captchaResult = await captchaResponse.json();
+      if (!captchaResult.success) {
+        return res.status(400).json({ error: "Captcha verification failed" });
+      }
     }
 
     // Get inbox email from config

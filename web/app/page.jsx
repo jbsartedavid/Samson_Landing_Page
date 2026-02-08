@@ -258,10 +258,6 @@ export default function Home() {
               About
             </motion.button>
 
-            <Link href="/obituaries" className="text-white/90 font-medium transition hover:text-[#e0b458] drop-shadow">
-              Obituaries
-            </Link>
-
             <Link href="/announcements" className="text-white/90 font-medium transition hover:text-[#e0b458] drop-shadow">
               Announcements
             </Link>
@@ -595,18 +591,18 @@ export default function Home() {
       {/* Services Carousel Section */}
       <motion.section
         id="services"
-        className="py-24 px-6 bg-transparent"
+        className="py-28 px-4 sm:px-6 bg-gradient-to-b from-[#f9f3e8] via-[#fbf7f0] to-transparent"
         {...fadeInUp}
       >
-        <div className="max-w-7xl mx-auto">
-          <motion.div className="text-center mb-16" {...fadeInUp}>
+        <div className="max-w-[1400px] mx-auto">
+          <motion.div className="text-center mb-20" {...fadeInUp}>
             <p className="text-[#b8892e] font-semibold tracking-[0.2em] uppercase text-sm mb-3">
               What We Offer
             </p>
-            <h2 className="text-4xl md:text-5xl font-bold text-[#3f2b17] mb-4">
+            <h2 className="text-4xl md:text-6xl font-bold text-[#3f2b17] mb-4">
               Our Services
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+            <p className="text-gray-600 max-w-3xl mx-auto text-lg md:text-xl">
               Dignified services designed to honor every life with grace and respect.
             </p>
           </motion.div>
@@ -615,17 +611,22 @@ export default function Home() {
             <motion.div {...fadeInUp}>
               <Swiper
                 modules={[Autoplay, Navigation, Pagination]}
-                spaceBetween={32}
+                spaceBetween={36}
                 slidesPerView={1}
-                autoplay={{ delay: 5000, disableOnInteraction: false }}
+                centeredSlides
+                loop
+                grabCursor
+                autoplay={{ delay: 4500, disableOnInteraction: false }}
+                speed={900}
                 pagination={{ clickable: true }}
                 navigation
                 breakpoints={{
                   640: { slidesPerView: 1 },
                   768: { slidesPerView: 2 },
-                  1024: { slidesPerView: 3 },
+                  1024: { slidesPerView: 2.5 },
+                  1280: { slidesPerView: 3 },
                 }}
-                className="pb-16 services-swiper"
+                className="pb-20 services-swiper"
               >
                 {servicesData.map((service, i) => (
                   <SwiperSlide key={i}>
@@ -637,13 +638,13 @@ export default function Home() {
                       whileHover={{ y: -8 }}
                       className="group h-full"
                     >
-                      <div className="relative bg-white rounded-2xl shadow-sm hover:shadow-2xl overflow-hidden h-full border border-gray-100 transition-all">
+                      <div className="service-card relative bg-white rounded-3xl shadow-lg hover:shadow-2xl overflow-hidden h-full border border-transparent transition-all">
                         {service.image && (
-                          <div className="relative h-64 overflow-hidden bg-gray-100">
+                          <div className="relative h-80 md:h-[360px] lg:h-[460px] overflow-hidden bg-gray-100">
                             {isVideoUrl(service.image) ? (
                               <video
                                 src={service.image}
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-cover scale-[1.03]"
                                 autoPlay
                                 muted
                                 loop
@@ -656,21 +657,21 @@ export default function Home() {
                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                               />
                             )}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                           </div>
                         )}
 
-                        <div className="p-8">
-                          <h3 className="text-2xl font-bold text-[#3f2b17] mb-3">
+                        <div className="p-6 md:p-7">
+                          <h3 className="text-xl md:text-2xl font-bold text-[#3f2b17] mb-3">
                             {service.heading || service.name}
                           </h3>
-                          <p className="text-gray-600 leading-relaxed mb-6">
+                          <p className="text-gray-600 leading-relaxed mb-5 text-xs md:text-sm">
                             {service.caption || service.description || service.content}
                           </p>
                           <motion.button
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            className="w-full py-3 bg-[#b8892e] hover:bg-[#a07827] text-white rounded-lg font-semibold transition-all shadow-sm hover:shadow-md"
+                            className="w-full py-2.5 bg-[#b8892e] hover:bg-[#a07827] text-white rounded-lg font-semibold transition-all shadow-sm hover:shadow-md text-sm"
                           >
                             Learn More
                           </motion.button>
@@ -964,7 +965,6 @@ export default function Home() {
                   : [
                     { label: "About Us", href: "#about" },
                     { label: "Services", href: "#services" },
-                    { label: "Obituaries", href: "/obituaries" },
                     { label: "Directory", href: "/directory" },
                     { label: "Contact", href: "#contact" }
                   ].map((link, idx) => (

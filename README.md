@@ -21,7 +21,7 @@ A modern, feature-rich landing page and content management system for Samson Fun
 ### 🎯 **Public Facing**
 - ✅ Stunning hero section with animated gradient backgrounds
 - ✅ Services carousel with video demonstrations
-- ✅ Obituaries & Announcements gallery
+- ✅ Announcements gallery
 - ✅ Officers & Staff directory with profiles
 - ✅ Affiliations & Partnerships showcase
 - ✅ Interactive contact section with multiple channels:
@@ -48,7 +48,6 @@ A modern, feature-rich landing page and content management system for Samson Fun
   - WhatsApp number configuration
   
 - ✅ **Content Management Modules**
-  - Obituaries management (CRUD)
   - Announcements posting
   - Directory entries (funeral parlors, partners)
   - Officers & employees profiles

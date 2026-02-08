@@ -1,9 +1,12 @@
 node_modules/
 *.db
+*.db-journal
 .env
 .env.local
 dist/
 build/
+.next/
+web/.next/
 .DS_Store
 *.log
 .vscode/

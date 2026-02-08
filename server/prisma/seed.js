@@ -117,7 +117,6 @@ const contentSeed = [
     value: JSON.stringify([
       { label: "About Us", href: "#about" },
       { label: "Services", href: "#services" },
-      { label: "Obituaries", href: "/obituaries" },
       { label: "Directory", href: "/directory" },
       { label: "Contact", href: "#contact" }
     ]),

@@ -46,19 +46,6 @@ model ChatMessage {
   session ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 }
 
-model Obituary {
-  id        Int      @id @default(autoincrement())
-  title     String
-  deceased  String
-  content   String
-  image     String?
-  dateOfDeath DateTime
-  dateOfService DateTime?
-  location  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model Announcement {
   id        Int      @id @default(autoincrement())
   title     String
