@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const isProd = process.env.NODE_ENV === "production";
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH || (isProd ? "/Samson_Landing_Page" : "");
+const isNetlify = Boolean(process.env.NETLIFY);
+const basePath = isNetlify
+  ? ""
+  : process.env.NEXT_PUBLIC_BASE_PATH || (isProd ? "/Samson_Landing_Page" : "");
 const assetPrefix = basePath ? `${basePath}/` : "";
 
 const nextConfig = {
